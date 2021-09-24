@@ -1,0 +1,33 @@
+{
+  "name": "ans-arweave",
+  "version": "1.0.0",
+  "description": "decentralized names service for Arweave wallets",
+  "main": "lib/api.js",
+  "scripts": {
+    "start": "node lib/api.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decentLand/ans.git"
+  },
+  "keywords": [
+    "arweave",
+    "domains",
+    "web3",
+    "api"
+  ],
+  "author": "charmful0x",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/decentLand/ans/issues"
+  },
+  "dependencies": {
+    "arweave": "^1.10.16",
+    "express": "^4.17.1",
+    "redstone-smartweave": "^0.3.10-alpha.12",
+    "secure-env": "^1.2.0"
+  },
+  "engines": {
+    "node": "14.x"
+  }
+}
