@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/decentLand/ans.git"
+    "url": "git+https://github.com/decentLand/ans-arweave.git"
   },
   "keywords": [
     "arweave",
@@ -19,7 +19,7 @@
   "author": "charmful0x",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/decentLand/ans/issues"
+    "url": "https://github.com/decentLand/ans-arweave/issues"
   },
   "dependencies": {
     "arweave": "^1.10.16",
@@ -28,6 +28,7 @@
     "secure-env": "^1.2.0"
   },
   "engines": {
-    "node": "14.x"
+    "node": "14.17.1",
+    "npm": "6.14.13"
   }
 }
