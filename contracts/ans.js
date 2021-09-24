@@ -52,26 +52,7 @@ export async function handle(state, action){
     if (input.function === "deposit") {
         const tx = input.tx
 
-        if ( deposits.includes(tx) ) {
-            throw new ContractError(ERROR_DUPLICATED_TX)
-        }
-
-        const txObject = await SmartWeave.unsafeClient.transactions.get(tx)
-        const txOwner = txObject["owner"]
-        const ownerAddress = await SmartWeave.unsafeClient.wallets.ownerToAddress(txOwner)
-
-        if (ownerAddress !== caller) {
-            throw new ContractError(ERROR_INVALID_DEPOSITOR)
-        }
-
-        const fcpTxsValidation = await SmartWeave.contracts.readContractState(WDLT, void 0, true)
-        const validity = fcpTxsValidation["validity"]
-
-        if (! validity[tx] ) {
-            throw new ContractError(ERROR_INVALID_DEPOSIT_TX)
-        }
-
-        // await _validateDepositTransaction(tx, caller);
+        await _validateDepositTransaction(tx, caller);
         const depositQty = await _getDepositQty(tx);
 
         if (! balances[caller]) {
@@ -132,10 +113,7 @@ export async function handle(state, action){
             ownedLabels: [labelObject],
             bio: bio,
             avatar: avatar
-        })
-
-        console.log("STATE IN SETPROFILE")
-        console.log(state)
+        });
 
         return { state }
     }
@@ -181,19 +159,18 @@ export async function handle(state, action){
 
     // WDLT ACTIONS
 
-
-
     if (input.function === "getAddressOf") {
 
         const label = input.label
         const validatedLabel = _getLabel(label);
         const userObject = state.users.find(user => user["currentLabel"] === validatedLabel)
-        const address = userObject["user"]
-
-        if (! address) {
+        
+        if (! userObject) {
             throw new ContractError(ERROR_LABEL_DOES_NOT_RESOLVE)
         }
-
+        
+        const address = userObject["user"]
+        
         return {
             result:{
                 address: address
@@ -377,10 +354,28 @@ export async function handle(state, action){
     }
 
 
-    // async function _validateDepositTransaction(txid, address) {
+    async function _validateDepositTransaction(txid, address) {
 
+        if ( deposits.includes(txid) ) {
+            throw new ContractError(ERROR_DUPLICATED_TX)
+        }
 
-    // }
+        const txObject = await SmartWeave.unsafeClient.transactions.get(txid)
+        const txOwner = txObject["owner"]
+        const ownerAddress = await SmartWeave.unsafeClient.wallets.ownerToAddress(txOwner)
+
+        if (ownerAddress !== address) {
+            throw new ContractError(ERROR_INVALID_DEPOSITOR)
+        }
+
+        const fcpTxsValidation = await SmartWeave.contracts.readContractState(WDLT, void 0, true)
+        const validity = fcpTxsValidation["validity"]
+
+        if (! validity[txid] ) {
+            throw new ContractError(ERROR_INVALID_DEPOSIT_TX)
+        }
+    };
+
 
     async function _getDepositQty(txid) {
 
